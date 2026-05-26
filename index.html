@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- ========================================== -->
+    <!-- 1. PRE-CARREGAMENTO E PERFORMANCE (CORE WEB VITALS) -->
+    <!-- ========================================== -->
+    <link rel="preconnect" href="https://app.sorteclub.com" crossorigin>
+    <link rel="dns-prefetch" href="https://app.sorteclub.com">
+    <!-- Speculation Rules para pré-renderizar a página no background -->
+    <script type="speculationrules">
+    {
+      "prerender": [{
+        "source": "list",
+        "urls": ["https://app.sorteclub.com/pr/xpBkJtSK"]
+      }]
+    }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 2. SEO AVANÇADO E METADADOS -->
+    <!-- ========================================== -->
+    <title>Super Bancas - Acesso Rápido</title>
+    <meta name="description" content="Acesse a plataforma Super Bancas diretamente. A melhor experiência em gestão e acesso rápido.">
+    <meta name="keywords" content="bancas, gestão, acesso rápido, plataforma, superbancas">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Seu Nome ou Empresa">
+    <link rel="canonical" href="https://SEU-DOMINIO-NO-RENDER.com" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://SEU-DOMINIO-NO-RENDER.com">
+    <meta property="og:title" content="Super Bancas - Acesso Rápido">
+    <meta property="og:description" content="Acesse a plataforma Super Bancas diretamente com a melhor experiência e carregamento instantâneo.">
+    <!-- IMPORTANTE: Troque a URL abaixo pelo link real da sua imagem de compartilhamento -->
+    <meta property="og:image" content="https://SEU-DOMINIO-NO-RENDER.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Super Bancas - Acesso Rápido">
+    <meta name="twitter:description" content="Acesse a plataforma Super Bancas diretamente com a melhor experiência e carregamento instantâneo.">
+    <!-- IMPORTANTE: Troque a URL abaixo pelo link real da sua imagem -->
+    <meta name="twitter:image" content="https://SEU-DOMINIO-NO-RENDER.com/og-image.jpg">
+
+    <!-- ========================================== -->
+    <!-- 3. CONFIGURAÇÕES DO PWA -->
+    <!-- ========================================== -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#121212">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+
+    <!-- ========================================== -->
+    <!-- 4. ESTILOS (CSS) -->
+    <!-- ========================================== -->
+    <style>
+        /* Reset para tela cheia absoluta */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Remove rolagem dupla */
+            background-color: #000;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Iframe invisível até carregar, ocupando 100% do espaço */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Pop-up Customizado de Instalação do PWA */
+        #pwa-prompt {
+            display: none; /* Escondido por padrão, ativado via JS */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            color: #333;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        #pwa-prompt p {
+            margin: 0 0 12px 0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .pwa-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-install {
+            background-color: #007bff;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-install:hover { background-color: #0056b3; }
+
+        .btn-close {
+            background-color: #f1f1f1;
+            color: #555;
+        }
+
+        .btn-close:hover { background-color: #e2e2e2; }
+    </style>
+</head>
+<body>
+
+    <!-- Pop-up do PWA -->
+    <div id="pwa-prompt">
+        <p>Instale nosso App para uma experiência mais rápida e em tela cheia!</p>
+        <div class="pwa-buttons">
+            <button class="btn btn-close" id="pwa-close">Agora não</button>
+            <button class="btn btn-install" id="pwa-install">Instalar App</button>
+        </div>
+    </div>
+
+    <!-- Iframe com permissões completas de hardware e clipboard -->
+    <iframe 
+        src="https://app.superbancas.club/pr/3Ojb9vQx" 
+        title="Super Bancas App"
+        allow="clipboard-read; clipboard-write; camera; microphone; geolocation; display-capture; fullscreen"
+        allowfullscreen>
+    </iframe>
+
+    <!-- ========================================== -->
+    <!-- 5. SCRIPTS (Service Worker e Lógica PWA) -->
+    <!-- ========================================== -->
+    <script>
+        // Registra o Service Worker para habilitar o PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registrado!', reg))
+                    .catch(err => console.error('Erro no Service Worker', err));
+            });
+        }
+
+        // Lógica de prompt de instalação contínua
+        let deferredPrompt;
+        const pwaPrompt = document.getElementById('pwa-prompt');
+        const installBtn = document.getElementById('pwa-install');
+        const closeBtn = document.getElementById('pwa-close');
+
+        // Este evento dispara automaticamente caso o PWA não esteja instalado
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Previne o mini-infobar padrão do Chrome
+            e.preventDefault();
+            // Guarda o evento para acionar depois
+            deferredPrompt = e;
+            // Mostra nosso UI customizado
+            pwaPrompt.style.display = 'block';
+        });
+
+        // Quando o usuário clica em "Instalar App"
+        installBtn.addEventListener('click', async () => {
+            pwaPrompt.style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('PWA Instalado com sucesso');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Quando o usuário clica em "Agora não"
+        closeBtn.addEventListener('click', () => {
+            pwaPrompt.style.display = 'none';
+            // Como não instalou, o evento beforeinstallprompt vai disparar de novo no próximo refresh.
+        });
+    </script>
+</body>
+</html>
