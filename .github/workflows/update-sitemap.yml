@@ -3,10 +3,11 @@ name: Atualizar Timestamp do Sitemap
 on:
   push:
     branches:
-      - main  # Altere para 'master' se o seu branch principal tiver esse nome
+      - main
+      - master
     paths:
-      - 'index.html'
       - '**.html'
+  workflow_dispatch: # ATIVAÇÃO MANUAL: Permite rodar o script por um botão no GitHub
 
 permissions:
   contents: write
@@ -28,7 +29,10 @@ jobs:
             with open('sitemap.xml', 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Substitui a tag <lastmod> pela data atual
+            if '<lastmod>' not in content:
+                print('Erro: A tag <lastmod> não foi encontrada no sitemap.xml')
+                exit(1)
+
             updated_content = re.sub(r'<lastmod>.*?</lastmod>', f'<lastmod>' + today + '</lastmod>', content)
             
             with open('sitemap.xml', 'w', encoding='utf-8') as f:
@@ -44,11 +48,10 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # Verifica se o sitemap realmente mudou para evitar commits vazios
         if git diff --quiet sitemap.xml; then
-          echo "O sitemap já estava atualizado."
+          echo "O sitemap já estava atualizado com a data de hoje."
         else
           git add sitemap.xml
-          git commit -m "chore: atualizar lastmod no sitemap.xml devido a mudanças no HTML"
+          git commit -m "chore: atualizar lastmod no sitemap.xml [skip ci]"
           git push
         fi
