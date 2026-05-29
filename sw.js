@@ -6,8 +6,14 @@ const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/manifest.json',
-    '/icon-192x192.png',
-    '/icon-512x512.png'
+    '/Assets/icon-192x192.png',
+    '/Assets/icon-512x512.png',
+    '/Assets/favicon-16x16.webp',
+    '/Assets/favicon-192x192.webp',
+    '/Assets/favicon-32x32.webp',
+    '/Assets/favicon-512.png',
+    '/Assets/favicon.ico',
+    '/Assets/og-image'
 ];
 
 // 1. INSTALAÇÃO (Cache dos arquivos estáticos)
