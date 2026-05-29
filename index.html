@@ -78,7 +78,7 @@
     </script>
 
     <style>
-        /* Estilos críticos inline para performance */
+        /* Estilos críticos inline para performance máxima */
         :root {
             --bg-color: #000;
             --text-color: #333;
@@ -86,6 +86,11 @@
             --primary-hover: #0056b3;
             --secondary-color: #f1f1f1;
             --secondary-hover: #e2e2e2;
+            --splash-bg: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         html, body {
@@ -99,7 +104,85 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* Melhoria de CLS: Iframe com dimensões fixas e background */
+        /* SPLASH SCREEN - Exibido enquanto o iframe carrega */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--splash-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.6s ease-out;
+        }
+
+        #splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .splash-content {
+            text-align: center;
+            color: #fff;
+        }
+
+        .splash-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .splash-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .splash-subtext {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+        }
+
+        /* Loader animado */
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Container do iframe - inicialmente oculto */
+        #iframe-container {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
+        }
+
+        #iframe-container.visible {
+            opacity: 1;
+        }
+
         iframe {
             width: 100%;
             height: 100%;
@@ -175,7 +258,7 @@
 
         .btn-close:hover { background-color: var(--secondary-hover); }
 
-        /* Acessibilidade: Esconder H1 visualmente mas manter para SEO/Screen Readers */
+        /* Acessibilidade */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -187,12 +270,47 @@
             white-space: nowrap;
             border-width: 0;
         }
+
+        /* Reduz CLS: Garante espaço para PWA prompt */
+        body.pwa-ready {
+            padding-bottom: 0;
+        }
     </style>
 </head>
 <body>
 
     <!-- SEO & Acessibilidade: Título Principal Oculto -->
     <h1 class="sr-only">77X BRASIL - Apostas Online e Jogo do Bicho</h1>
+
+    <!-- SPLASH SCREEN - Carregamento Inicial -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <!-- Logo ou ícone (pode ser um SVG ou emoji) -->
+            <div class="splash-logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#007bff" stroke-width="2"/>
+                    <text x="50" y="60" font-size="40" font-weight="bold" fill="#007bff" text-anchor="middle">77</text>
+                </svg>
+            </div>
+            <div class="splash-text">77X BRASIL</div>
+            <div class="splash-subtext">Carregando sua experiência...</div>
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- Container do iframe com carregamento progressivo -->
+    <div id="iframe-container">
+        <!-- Iframe Otimizado com carregamento lazy -->
+        <iframe 
+            id="main-iframe"
+            src="https://app.sorteclub.com/pr/xpBkJtSK" 
+            title="Plataforma de Apostas 77x Brasil"
+            allow="clipboard-read; clipboard-write; camera; microphone; geolocation; display-capture; fullscreen"
+            loading="lazy"
+            fetchpriority="low"
+            allowfullscreen>
+        </iframe>
+    </div>
 
     <!-- Pop-up do PWA com ARIA labels -->
     <div id="pwa-prompt" role="dialog" aria-labelledby="pwa-title" aria-modal="true">
@@ -203,18 +321,62 @@
         </div>
     </div>
 
-    <!-- Iframe Otimizado -->
-    <iframe 
-        src="https://app.sorteclub.com/pr/xpBkJtSK" 
-        title="Plataforma de Apostas 77x Brasil"
-        allow="clipboard-read; clipboard-write; camera; microphone; geolocation; display-capture; fullscreen"
-        loading="eager"
-        fetchpriority="high"
-        allowfullscreen>
-    </iframe>
-
     <script>
-        // Otimização do Service Worker
+        // ============================================
+        // 1. GERENCIAMENTO DO SPLASH SCREEN
+        // ============================================
+        const splashScreen = document.getElementById('splash-screen');
+        const iframeContainer = document.getElementById('iframe-container');
+        const mainIframe = document.getElementById('main-iframe');
+
+        /**
+         * Esconde o splash screen com transição suave
+         */
+        function hideSplashScreen() {
+            splashScreen.classList.add('hidden');
+            iframeContainer.classList.add('visible');
+        }
+
+        /**
+         * Estratégia de carregamento: Esconde splash quando:
+         * 1. O iframe começar a carregar (readystatechange)
+         * 2. Ou após timeout de 3s (fallback para conexões lentas)
+         */
+        let splashHidden = false;
+
+        // Monitora o carregamento do iframe
+        mainIframe.addEventListener('load', () => {
+            if (!splashHidden) {
+                splashHidden = true;
+                hideSplashScreen();
+            }
+        });
+
+        mainIframe.addEventListener('error', () => {
+            console.error('Erro ao carregar iframe');
+            if (!splashHidden) {
+                splashHidden = true;
+                hideSplashScreen();
+            }
+        });
+
+        // Fallback: Esconde splash após 3 segundos (garante UX mesmo com conexão lenta)
+        const splashTimeout = setTimeout(() => {
+            if (!splashHidden) {
+                splashHidden = true;
+                hideSplashScreen();
+            }
+        }, 3000);
+
+        // Otimização: Dispara carregamento do iframe imediatamente
+        window.addEventListener('DOMContentLoaded', () => {
+            // Força o início do carregamento do iframe
+            mainIframe.src = mainIframe.src;
+        });
+
+        // ============================================
+        // 2. SERVICE WORKER REGISTRATION
+        // ============================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js', { scope: '/' })
@@ -223,7 +385,9 @@
             });
         }
 
-        // Lógica PWA com melhorias de UX
+        // ============================================
+        // 3. LÓGICA PWA COM MELHORIAS DE UX
+        // ============================================
         let deferredPrompt;
         const pwaPrompt = document.getElementById('pwa-prompt');
         const installBtn = document.getElementById('pwa-install');
@@ -232,10 +396,12 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Pequeno delay para não interromper o carregamento inicial
+            // Mostra prompt após 5 segundos (depois que o conteúdo está visível)
             setTimeout(() => {
-                pwaPrompt.style.display = 'block';
-            }, 3000);
+                if (sessionStorage.getItem('pwa-prompt-dismissed') !== 'true') {
+                    pwaPrompt.style.display = 'block';
+                }
+            }, 5000);
         });
 
         installBtn.addEventListener('click', async () => {
@@ -250,13 +416,25 @@
 
         closeBtn.addEventListener('click', () => {
             pwaPrompt.style.display = 'none';
-            // Opcional: Salvar no localStorage para não mostrar novamente na mesma sessão
             sessionStorage.setItem('pwa-prompt-dismissed', 'true');
         });
 
         // Verifica se já foi dispensado nesta sessão
         if (sessionStorage.getItem('pwa-prompt-dismissed') === 'true') {
             pwaPrompt.style.display = 'none';
+        }
+
+        // ============================================
+        // 4. OTIMIZAÇÃO ADICIONAL: Prefetch de recursos
+        // ============================================
+        // Prefetch do domínio do iframe assim que possível
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                const link = document.createElement('link');
+                link.rel = 'prefetch';
+                link.href = 'https://app.sorteclub.com/pr/xpBkJtSK';
+                document.head.appendChild(link);
+            });
         }
     </script>
 </body>
