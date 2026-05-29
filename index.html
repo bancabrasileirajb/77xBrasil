@@ -86,7 +86,7 @@
             --primary-hover: #0056b3;
             --secondary-color: #f1f1f1;
             --secondary-hover: #e2e2e2;
-            --splash-bg: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            --splash-bg: #00bb6a;
         }
 
         * {
@@ -104,16 +104,15 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* SPLASH SCREEN - Exibido enquanto o iframe carrega */
+        /* SPLASH SCREEN MINIMALISTA - Apenas imagem e fundo verde */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--splash-bg);
+            background-color: var(--splash-bg);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
@@ -126,49 +125,21 @@
             pointer-events: none;
         }
 
-        .splash-content {
-            text-align: center;
-            color: #fff;
+        .splash-icon {
+            width: 120px;
+            height: 120px;
+            animation: fadeInScale 0.8s ease-out;
         }
 
-        .splash-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        .splash-text {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .splash-subtext {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 32px;
-        }
-
-        /* Loader animado */
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* Container do iframe - inicialmente oculto */
@@ -270,11 +241,6 @@
             white-space: nowrap;
             border-width: 0;
         }
-
-        /* Reduz CLS: Garante espaço para PWA prompt */
-        body.pwa-ready {
-            padding-bottom: 0;
-        }
     </style>
 </head>
 <body>
@@ -282,25 +248,14 @@
     <!-- SEO & Acessibilidade: Título Principal Oculto -->
     <h1 class="sr-only">77X BRASIL - Apostas Online e Jogo do Bicho</h1>
 
-    <!-- SPLASH SCREEN - Carregamento Inicial -->
+    <!-- SPLASH SCREEN MINIMALISTA -->
     <div id="splash-screen">
-        <div class="splash-content">
-            <!-- Logo ou ícone (pode ser um SVG ou emoji) -->
-            <div class="splash-logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-                    <circle cx="50" cy="50" r="45" fill="none" stroke="#007bff" stroke-width="2"/>
-                    <text x="50" y="60" font-size="40" font-weight="bold" fill="#007bff" text-anchor="middle">77</text>
-                </svg>
-            </div>
-            <div class="splash-text">77X BRASIL</div>
-            <div class="splash-subtext">Carregando sua experiência...</div>
-            <div class="loader"></div>
-        </div>
+        <img src="/Assets/favicon-512.png" alt="77X Brasil" class="splash-icon">
     </div>
 
     <!-- Container do iframe com carregamento progressivo -->
     <div id="iframe-container">
-        <!-- Iframe Otimizado com carregamento lazy -->
+        <!-- Iframe Otimizado -->
         <iframe 
             id="main-iframe"
             src="https://app.sorteclub.com/pr/xpBkJtSK" 
