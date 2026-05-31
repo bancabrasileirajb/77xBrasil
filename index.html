@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <!-- Pre-conexão com domínios críticos -->
+    <!-- Pre-conexão com domínios críticos para performance -->
     <link rel="preconnect" href="https://app.sorteclub.com" crossorigin>
     <link rel="dns-prefetch" href="https://app.sorteclub.com">
-    
-    <!-- Regras de especulação para carregamento antecipado -->
+
+    <!-- Regras de especulação para carregamento antecipado (Speculation Rules API) -->
     <script type="speculationrules">
     {
       "prerender": [{
@@ -37,13 +37,13 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
-    <!-- Twitter -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="77X BRASIL | Apostas Online">
     <meta name="twitter:description" content="Bônus exclusivos e segurança nas suas apostas. Cadastre-se na 77x Brasil!">
     <meta name="twitter:image" content="https://www.77xbrasil.app.br/Assets/og-image.jpg">
 
-    <!-- Favicons e Manifest -->
+    <!-- Favicons e Manifest PWA -->
     <link rel="icon" href="/Assets/favicon.ico" sizes="any">
     <link rel="icon" href="/Assets/favicon-16x16.webp" type="image/webp" sizes="16x16">
     <link rel="icon" href="/Assets/favicon-32x32.webp" type="image/webp" sizes="32x32">
@@ -58,14 +58,16 @@
     <meta name="apple-mobile-web-app-title" content="77X BRASIL">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Dados Estruturados (JSON-LD) para SEO -->
+    <!-- Dados Estruturados (JSON-LD) para SEO Avançado -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
+      "@type": "WebApplication",
       "name": "77X BRASIL",
       "url": "https://www.77xbrasil.app.br/",
-      "description": "Plataforma de apostas online e Jogo do Bicho com bônus exclusivos.",
+      "description": "Plataforma de apostas online e Jogo do Bicho com bônus exclusivos e segurança garantida.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
       "publisher": {
         "@type": "Organization",
         "name": "77X BRASIL",
@@ -73,6 +75,12 @@
           "@type": "ImageObject",
           "url": "https://www.77xbrasil.app.br/Assets/favicon-512.webp"
         }
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "description": "30% de Bônus de Boas-Vindas"
       }
     }
     </script>
@@ -96,8 +104,8 @@
         html, body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
             background-color: var(--bg-color);
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -117,11 +125,12 @@
             justify-content: center;
             z-index: 9999;
             opacity: 1;
-            transition: opacity 0.6s ease-out;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
         }
 
         #splash-screen.hidden {
             opacity: 0;
+            visibility: hidden;
             pointer-events: none;
         }
 
@@ -147,7 +156,7 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.6s ease-out;
+            transition: opacity 0.5s ease;
         }
 
         #iframe-container.visible {
@@ -229,7 +238,7 @@
 
         .btn-close:hover { background-color: var(--secondary-hover); }
 
-        /* Acessibilidade */
+        /* Acessibilidade e SEO */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -245,8 +254,23 @@
 </head>
 <body>
 
-    <!-- SEO & Acessibilidade: Título Principal Oculto -->
-    <h1 class="sr-only">77X BRASIL - Apostas Online e Jogo do Bicho</h1>
+    <!-- SEO & Acessibilidade: Conteúdo estruturado invisível para motores de busca -->
+    <article class="sr-only">
+        <h1>77X BRASIL - Apostas Online e Jogo do Bicho</h1>
+        <p>Aposte na 77x Brasil: 30% de Bônus de Boas-Vindas, +15% diários e 20% em dias de Federal. Jogo do Bicho, Cassino e muito mais com total segurança e praticidade.</p>
+        <h2>Plataforma 77X Brasil</h2>
+        <ul>
+            <li>30% de Bônus de Boas-Vindas</li>
+            <li>+15% de bônus diários</li>
+            <li>20% em dias de Federal</li>
+            <li>Jogo do Bicho seguro</li>
+            <li>Cassino com múltiplas opções</li>
+            <li>Tigrinho, Bingo, Fazendinha</li>
+            <li>Raspadinha e Loteria</li>
+            <li>Acesso instantâneo de qualquer dispositivo</li>
+            <li>Integração completa de ferramentas de administração</li>
+        </ul>
+    </article>
 
     <!-- SPLASH SCREEN MINIMALISTA -->
     <div id="splash-screen">
@@ -255,19 +279,16 @@
 
     <!-- Container do iframe com carregamento progressivo -->
     <main id="iframe-container">
-        <!-- Iframe Otimizado -->
+        <!-- Iframe Otimizado com permissões completas -->
         <iframe 
             id="main-iframe"
-            src="https://app.sorteclub.com/pr/xpBkJtSK" 
             title="Plataforma de Apostas 77x Brasil"
             allow="clipboard-read; clipboard-write; camera; microphone; geolocation; display-capture; fullscreen"
-            loading="lazy"
-            fetchpriority="low"
             allowfullscreen>
         </iframe>
     </main>
 
-    <!-- Pop-up do PWA com ARIA labels -->
+    <!-- Pop-up do PWA com ARIA labels para acessibilidade -->
     <div id="pwa-prompt" role="dialog" aria-labelledby="pwa-title" aria-modal="true">
         <p id="pwa-title">Instale nosso App para uma experiência mais rápida e em tela cheia!</p>
         <div class="pwa-buttons">
@@ -278,11 +299,12 @@
 
     <script>
         // ============================================
-        // 1. GERENCIAMENTO DO SPLASH SCREEN
+        // 1. CARREGAMENTO INTELIGENTE DO IFRAME
         // ============================================
         const splashScreen = document.getElementById('splash-screen');
         const iframeContainer = document.getElementById('iframe-container');
         const mainIframe = document.getElementById('main-iframe');
+        const targetUrl = "https://app.sorteclub.com/pr/xpBkJtSK";
 
         /**
          * Esconde o splash screen com transição suave
@@ -293,11 +315,24 @@
         }
 
         /**
-         * Estratégia de carregamento: Esconde splash quando:
-         * 1. O iframe começar a carregar (readystatechange)
-         * 2. Ou após timeout de 3s (fallback para conexões lentas)
+         * Estratégia de carregamento otimizada:
+         * 1. Carrega o iframe com requestIdleCallback quando possível
+         * 2. Esconde splash quando iframe carrega
+         * 3. Fallback de 3 segundos para conexões lentas
          */
         let splashHidden = false;
+
+        const loadIframe = () => {
+            mainIframe.src = targetUrl;
+        };
+
+        // Usa requestIdleCallback para não bloquear a thread principal
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadIframe, { timeout: 1000 });
+        } else {
+            // Fallback para navegadores sem suporte
+            setTimeout(loadIframe, 150);
+        }
 
         // Monitora o carregamento do iframe
         mainIframe.addEventListener('load', () => {
@@ -307,6 +342,7 @@
             }
         });
 
+        // Tratamento de erro
         mainIframe.addEventListener('error', () => {
             console.error('Erro ao carregar iframe');
             if (!splashHidden) {
@@ -323,20 +359,14 @@
             }
         }, 3000);
 
-        // Otimização: Dispara carregamento do iframe imediatamente
-        window.addEventListener('DOMContentLoaded', () => {
-            // Força o início do carregamento do iframe
-            mainIframe.src = mainIframe.src;
-        });
-
         // ============================================
         // 2. SERVICE WORKER REGISTRATION
         // ============================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                    .then(reg => console.log('SW registrado com sucesso'))
-                    .catch(err => console.error('Falha ao registrar SW:', err));
+                    .then(reg => console.log('Service Worker registrado com sucesso'))
+                    .catch(err => console.error('Falha ao registrar Service Worker:', err));
             });
         }
 
@@ -377,19 +407,6 @@
         // Verifica se já foi dispensado nesta sessão
         if (sessionStorage.getItem('pwa-prompt-dismissed') === 'true') {
             pwaPrompt.style.display = 'none';
-        }
-
-        // ============================================
-        // 4. OTIMIZAÇÃO ADICIONAL: Prefetch de recursos
-        // ============================================
-        // Prefetch do domínio do iframe assim que possível
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => {
-                const link = document.createElement('link');
-                link.rel = 'prefetch';
-                link.href = 'https://app.sorteclub.com/pr/xpBkJtSK';
-                document.head.appendChild(link);
-            });
         }
     </script>
 </body>
