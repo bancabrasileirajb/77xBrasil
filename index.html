@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <!-- Pre-conexão com domínios críticos para performance -->
+    <!-- Pre-conexão seletiva (Reduzido para evitar sobrecarga) -->
     <link rel="preconnect" href="https://app.sorteclub.com" crossorigin>
     <link rel="dns-prefetch" href="https://app.sorteclub.com">
 
-    <!-- Regras de especulação para carregamento antecipado (Speculation Rules API) -->
+    <!-- Preload da imagem crítica (LCP) -->
+    <link rel="preload" as="image" href="/Assets/splashscreen.webp" type="image/webp">
+
+    <!-- Speculation Rules API para prerender da aplicação principal -->
     <script type="speculationrules">
     {
       "prerender": [{
@@ -58,14 +61,14 @@
     <meta name="apple-mobile-web-app-title" content="77X BRASIL">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Dados Estruturados (JSON-LD) para SEO Avançado -->
+    <!-- Dados Estruturados (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "77X BRASIL",
       "url": "https://www.77xbrasil.app.br/",
-      "description": "Plataforma de apostas online e Jogo do Bicho com bônus exclusivos e segurança garantida.",
+      "description": "Plataforma de apostas online e Jogo do Bicho com bônus exclusivos.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "All",
       "publisher": {
@@ -79,199 +82,104 @@
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "BRL",
-        "description": "30% de Bônus de Boas-Vindas"
+        "priceCurrency": "BRL"
       }
     }
     </script>
 
     <style>
-        /* Estilos críticos inline para performance máxima */
+        /* CSS Otimizado - Apenas o necessário para o primeiro carregamento */
         :root {
             --bg-color: #000;
-            --text-color: #ffffff;
-            --primary-color: #002b1b; /* Verde escuro do botão 'Entrar' */
+            --text-color: #222222;
+            --primary-color: #002b1b;
             --primary-hover: #001a10;
-            --secondary-color: #00d176; /* Verde claro do botão 'Cadastre-se' */
+            --secondary-color: #00d176;
             --secondary-hover: #00c06a;
-            --splash-bg: #00bb6a; /* Verde principal do fundo */
+            --splash-bg: #00bb6a;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background-color: var(--bg-color);
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: var(--bg-color);
+            font-family: system-ui, -apple-system, sans-serif;
             -webkit-text-size-adjust: 100%;
+            content-visibility: auto;
         }
 
-        /* SPLASH SCREEN MINIMALISTA */
         #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--splash-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; opacity: 1;
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
         }
 
-        #splash-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .splash-icon {
-            width: 120px;
-            height: 120px;
-            animation: fadeInScale 0.8s ease-out;
+            width: 120px; height: 120px;
+            will-change: transform, opacity;
+            animation: fadeInScale 0.6s ease-out forwards;
         }
 
         @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.8); }
+            from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Container do iframe */
-        #iframe-container {
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #iframe-container.visible {
-            opacity: 1;
-        }
+        #iframe-container { width: 100%; height: 100%; opacity: 0; transition: opacity 0.4s ease; }
+        #iframe-container.visible { opacity: 1; }
 
         iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            background-color: var(--bg-color);
-            color-scheme: dark;
+            width: 100%; height: 100%; border: none; display: block;
+            background-color: var(--bg-color); color-scheme: dark;
         }
 
-        /* Pop-up PWA Personalizado (Fundo Branco com Botões SorteClub) */
+        /* PWA Prompt Otimizado */
         #pwa-prompt {
-            display: none;
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff; /* Fundo branco solicitado */
-            color: #333333; /* Texto escuro para legibilidade */
-            padding: 24px;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            z-index: 10000;
-            width: 90%;
-            max-width: 380px;
-            text-align: center;
-            border: 1px solid rgba(0,0,0,0.05);
+            display: none; position: fixed; bottom: 24px; left: 50%;
+            transform: translateX(-50%); background: #ffffff;
+            color: var(--text-color); padding: 24px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000;
+            width: 90%; max-width: 380px; text-align: center;
             will-change: transform, opacity;
-            animation: slideUp 0.4s ease-out;
+            animation: slideUp 0.3s ease-out forwards;
         }
 
         @keyframes slideUp {
-            from { transform: translate(-50%, 100%); opacity: 0; }
+            from { transform: translate(-50%, 20px); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
 
-        #pwa-prompt p {
-            margin: 0 0 20px 0;
-            font-size: 17px;
-            font-weight: 600;
-            line-height: 1.4;
-            color: #222222; /* Texto principal em tom escuro */
-        }
-
-        .pwa-buttons {
-            display: flex;
-            flex-direction: column; /* Estilhando botões empilhados como no print */
-            gap: 12px;
-            justify-content: center;
-        }
+        #pwa-prompt p { margin: 0 0 20px 0; font-size: 17px; font-weight: 600; line-height: 1.4; }
+        .pwa-buttons { display: flex; flex-direction: column; gap: 10px; }
 
         .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            width: 100%;
+            padding: 14px 20px; border: none; border-radius: 12px;
+            font-weight: 700; font-size: 15px; cursor: pointer;
+            transition: opacity 0.2s; width: 100%;
         }
 
-        .btn:active { transform: scale(0.98); }
-
-        /* Botão Principal - Estilo 'Entrar' */
-        .btn-install {
-            background-color: var(--primary-color);
-            color: #ffffff;
-        }
-
-        .btn-install:hover { background-color: var(--primary-hover); }
-
-        /* Botão Secundário - Estilo 'Cadastre-se' */
-        .btn-close {
-            background-color: var(--secondary-color);
-            color: #ffffff;
-        }
-
-        .btn-close:hover { background-color: var(--secondary-hover); }
-
-        /* Acessibilidade e SEO */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
+        .btn-install { background-color: var(--primary-color); color: #fff; }
+        .btn-close { background-color: var(--secondary-color); color: #fff; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border-width: 0; }
     </style>
 </head>
 <body>
 
-    <!-- SEO & Acessibilidade -->
     <article class="sr-only">
         <h1>77X BRASIL - Apostas Online e Jogo do Bicho</h1>
-        <p>Aposte na 77x Brasil: 30% de Bônus de Boas-Vindas, +15% diários e 20% em dias de Federal. Jogo do Bicho, Cassino e muito mais com total segurança e praticidade.</p>
-        <h2>Plataforma 77X Brasil</h2>
-        <ul>
-            <li>30% de Bônus de Boas-Vindas</li>
-            <li>+15% de bônus diários</li>
-            <li>20% em dias de Federal</li>
-            <li>Jogo do Bicho seguro</li>
-            <li>Acesso instantâneo de qualquer dispositivo</li>
-        </ul>
+        <p>Aposte na 77x Brasil com 30% de Bônus. Jogo do Bicho e Cassino seguro.</p>
     </article>
 
-    <!-- SPLASH SCREEN MINIMALISTA -->
     <div id="splash-screen">
-        <img src="/Assets/splashscreen.webp" alt="77X Brasil" class="splash-icon">
+        <!-- Atribuindo fetchpriority alta para a imagem de splash (LCP) -->
+        <img src="/Assets/splashscreen.webp" alt="77X Brasil" class="splash-icon" fetchpriority="high">
     </div>
 
-    <!-- Container do iframe -->
     <main id="iframe-container">
         <iframe 
             id="main-iframe"
@@ -281,95 +189,72 @@
         </iframe>
     </main>
 
-    <!-- Pop-up do PWA Personalizado -->
     <div id="pwa-prompt" role="dialog" aria-labelledby="pwa-title" aria-modal="true">
-        <p id="pwa-title">Instale nosso App para uma experiência mais rápida e em tela cheia!</p>
+        <p id="pwa-title">Instale nosso App para uma experiência mais rápida!</p>
         <div class="pwa-buttons">
-            <button class="btn btn-install" id="pwa-install" aria-label="Instalar aplicativo 77X Brasil">Instalar App</button>
-            <button class="btn btn-close" id="pwa-close" aria-label="Fechar convite de instalação">Agora não</button>
+            <button class="btn btn-install" id="pwa-install">Instalar App</button>
+            <button class="btn btn-close" id="pwa-close">Agora não</button>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // 1. CARREGAMENTO INTELIGENTE DO IFRAME
-        // ============================================
+        // Otimização de carregamento: Adia scripts não essenciais
         const splashScreen = document.getElementById('splash-screen');
         const iframeContainer = document.getElementById('iframe-container');
         const mainIframe = document.getElementById('main-iframe');
         const targetUrl = "https://app.sorteclub.com/pr/xpBkJtSK";
 
-        function hideSplashScreen() {
-            splashScreen.classList.add('hidden');
-            iframeContainer.classList.add('visible');
-        }
-
         let splashHidden = false;
-
-        const loadIframe = () => {
-            mainIframe.src = targetUrl;
-        };
-
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadIframe, { timeout: 1000 });
-        } else {
-            setTimeout(loadIframe, 150);
-        }
-
-        mainIframe.addEventListener('load', () => {
+        function hideSplash() {
             if (!splashHidden) {
                 splashHidden = true;
-                hideSplashScreen();
+                splashScreen.classList.add('hidden');
+                iframeContainer.classList.add('visible');
             }
+        }
+
+        // Carregamento assíncrono do iframe
+        window.addEventListener('load', () => {
+            // Prioridade para o Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            }
+            
+            // Carrega iframe após o carregamento da página principal
+            setTimeout(() => {
+                mainIframe.src = targetUrl;
+            }, 100);
         });
 
-        const splashTimeout = setTimeout(() => {
-            if (!splashHidden) {
-                splashHidden = true;
-                hideSplashScreen();
-            }
-        }, 3000);
+        mainIframe.addEventListener('load', hideSplash);
+        
+        // Fallback mais agressivo para UX
+        setTimeout(hideSplash, 2500);
 
-        // ============================================
-        // 2. SERVICE WORKER REGISTRATION
-        // ============================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(err => console.error(err));
-            });
-        }
-
-        // ============================================
-        // 3. LÓGICA PWA PERSONALIZADA
-        // ============================================
+        // Lógica PWA adidada para não impactar TBT
         let deferredPrompt;
-        const pwaPrompt = document.getElementById('pwa-prompt');
-        const installBtn = document.getElementById('pwa-install');
-        const closeBtn = document.getElementById('pwa-close');
-
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             setTimeout(() => {
-                if (sessionStorage.getItem('pwa-prompt-dismissed') !== 'true') {
-                    pwaPrompt.style.display = 'block';
+                if (sessionStorage.getItem('pwa-dismissed') !== 'true') {
+                    document.getElementById('pwa-prompt').style.display = 'block';
                 }
-            }, 5000);
+            }, 6000);
         });
 
-        installBtn.addEventListener('click', async () => {
-            pwaPrompt.style.display = 'none';
+        document.getElementById('pwa-install').onclick = async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
                 deferredPrompt = null;
             }
-        });
+            document.getElementById('pwa-prompt').style.display = 'none';
+        };
 
-        closeBtn.addEventListener('click', () => {
-            pwaPrompt.style.display = 'none';
-            sessionStorage.setItem('pwa-prompt-dismissed', 'true');
-        });
+        document.getElementById('pwa-close').onclick = () => {
+            document.getElementById('pwa-prompt').style.display = 'none';
+            sessionStorage.setItem('pwa-dismissed', 'true');
+        };
     </script>
 </body>
 </html>
