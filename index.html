@@ -166,23 +166,23 @@
             color-scheme: dark;
         }
 
-        /* Pop-up PWA Personalizado (Estilo SorteClub) */
+        /* Pop-up PWA Personalizado (Fundo Branco com Botões SorteClub) */
         #pwa-prompt {
             display: none;
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--splash-bg); /* Fundo verde vibrante */
-            color: #ffffff;
+            background: #ffffff; /* Fundo branco solicitado */
+            color: #333333; /* Texto escuro para legibilidade */
             padding: 24px;
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             z-index: 10000;
             width: 90%;
             max-width: 380px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(0,0,0,0.05);
             will-change: transform, opacity;
             animation: slideUp 0.4s ease-out;
         }
@@ -197,7 +197,7 @@
             font-size: 17px;
             font-weight: 600;
             line-height: 1.4;
-            color: #ffffff;
+            color: #222222; /* Texto principal em tom escuro */
         }
 
         .pwa-buttons {
